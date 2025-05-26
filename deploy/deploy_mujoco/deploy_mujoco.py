@@ -76,8 +76,8 @@ if __name__ == "__main__":
         0.00255974,  0.        , -0.23306386,  0.05477175,  0.12390576,
        -1.084431  , -0.05879271, -0.74253875,  0.15691191, -0.6602233 ,
        -0.5101053 , -0.04324551,  0.        ], dtype=np.float32)
-    target_dof_pos = custom_init_angles.copy()
-    # target_dof_pos = default_angles.copy()
+    # target_dof_pos = custom_init_angles.copy()
+    target_dof_pos = default_angles.copy()
     obs = np.zeros(num_obs, dtype=np.float32)
 
     counter = 0
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     
     # === 使用标准直立姿态（与ASAP default_dof_pos对齐）===
     # 标准直立四元数 [w,x,y,z] = [1,0,0,0]
-    # d.qpos[3:7] = [ 1,0,0,0]  # 标准直立姿态
+    d.qpos[3:7] = [ 1,0,0,0]  # 标准直立姿态
 
     # === 使用ASAP训练时的实际姿态 ===
     # ASAP中观察到的四元数 [x,y,z,w] = [-0.1059, 0.1389, 0.9357, 0.3065]
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     # asap_quat_xyzw = np.array([ 0.03094886, -0.0356843 ,  0.96169288,  0.27002888])
     # asap_quat_wxyz = np.array([asap_quat_xyzw[3], asap_quat_xyzw[0], asap_quat_xyzw[1], asap_quat_xyzw[2]])
     # d.qpos[3:7] = asap_quat_wxyz  # 使用ASAP训练时的实际姿态
-    d.qpos[7:] = custom_init_angles
+    # d.qpos[7:] = custom_init_angles
     m.opt.timestep = simulation_dt
 
     # load policy
@@ -122,6 +122,7 @@ if __name__ == "__main__":
             mujoco.mj_step(m, d)
 
 
+            counter += 1  # 修复：确保counter正确递增
             if counter % control_decimation == 0:
                 # tau = pd_control(target_dof_pos, d.qpos[7:], kps, np.zeros_like(kds), d.qvel[6:], kds)
                 # # === ASAP对齐：clip torque ===
@@ -149,7 +150,7 @@ if __name__ == "__main__":
                 # 其中 base_quat 是 [x,y,z,w] 格式，gravity_vec = [0,0,-1]
                 quat_xyzw = np.array([quat[1], quat[2], quat[3], quat[0]])  # 转换为 [x,y,z,w]
                 gravity_orientation = quat_rotate_inverse(quat_xyzw, np.array([0,0,-1]))
-                print(quat_xyzw, gravity_orientation)
+                print(quat_xyzw, gravity_orientation, get_gravity_orientation(quat))
 
                 omega = omega * ang_vel_scale
 
@@ -184,7 +185,6 @@ if __name__ == "__main__":
             #     mujoco.mj_step(m, d)
             # counter += 1
 
-            counter += 1  # 修复：确保counter正确递增
 
             # Pick up changes to the physics state, apply perturbations, update options from GUI.
             viewer.sync()

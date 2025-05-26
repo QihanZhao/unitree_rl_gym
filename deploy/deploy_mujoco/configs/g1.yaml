@@ -1,5 +1,6 @@
-# 
-policy_path: "/media/hanx/Ventoy/Uproject/ASAP-main/logs/MotionTracking/20250523_194729-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof/exported/model_8000.pt" #{LEGGED_GYM_ROOT_DIR}/deploy/pre_train/g1/motion.pt"
+# policy_path: {LEGGED_GYM_ROOT_DIR}/deploy/pre_train/g1/motion.pt"
+# policy_path: "/media/hanx/Ventoy/Uproject/ASAP-main/logs/MotionTracking/20250523_194729-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof/exported/model_8000.pt" 
+policy_path: "/media/hanx/Ventoy/Uproject/ASAP-main/logs/MotionTracking/20250526_114429-MotionTracking_Stand-motion_tracking-g1_29dof_anneal_23dof/exported/model_5000.pt"
 xml_path: "{LEGGED_GYM_ROOT_DIR}/resources/robots/g1_description/scene.xml"
 # xml_path: "/media/hanx/Ventoy/Uproject/ASAP-main/humanoidverse/data/robots/g1/g1_29dof_anneal_23dof.xml"
 
