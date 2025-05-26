@@ -1,5 +1,5 @@
 <mujoco model="g1 scene">
-  <include file="g1_12dof.xml"/>
+  <include file="/media/hanx/Ventoy/Uproject/ASAP-main/humanoidverse/data/robots/g1/g1_29dof_anneal_23dof.xml"/>
 
   <statistic center="1.0 0.7 1.0" extent="0.8"/>
 
