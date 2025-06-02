@@ -32,6 +32,11 @@ class Config:
             self.arm_waist_kds = config["arm_waist_kds"]
             self.arm_waist_target = np.array(config["arm_waist_target"], dtype=np.float32)
 
+            self.wrist_joint2motor_idx = config["wrist_joint2motor_idx"]
+            self.wrist_kps = config["wrist_kps"]
+            self.wrist_kds = config["wrist_kds"]
+            self.wrist_target = np.array(config["wrist_target"], dtype=np.float32)
+
             self.ang_vel_scale = config["ang_vel_scale"]
             self.dof_pos_scale = config["dof_pos_scale"]
             self.dof_vel_scale = config["dof_vel_scale"]
