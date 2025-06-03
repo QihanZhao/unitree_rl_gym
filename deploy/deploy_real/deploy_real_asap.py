@@ -60,6 +60,16 @@ class Controller:
         self.cmd = np.array([0.0, 0, 0])
         self.counter = 0
 
+        # 读取关节位置限制参数
+        self.clip_positions = getattr(config, 'clip_positions', False)
+        if hasattr(config, 'joint_limits_lower') and hasattr(config, 'joint_limits_upper'):
+            self.joint_limits_lower = np.array(config.joint_limits_lower, dtype=np.float32)
+            self.joint_limits_upper = np.array(config.joint_limits_upper, dtype=np.float32)
+        else:
+            # 如果配置文件中没有关节限制，使用默认值
+            self.joint_limits_lower = np.array([-10.0] * config.num_actions, dtype=np.float32)
+            self.joint_limits_upper = np.array([10.0] * config.num_actions, dtype=np.float32)
+
         if config.msg_type == "hg":
             # g1 and h1_2 use the hg msg type
             self.low_cmd = unitree_hg_msg_dds__LowCmd_()
@@ -259,6 +269,24 @@ class Controller:
         # transform action to target_dof_pos for arms/waist
         arm_waist_default_angles = self.config.default_angles[len(self.config.leg_joint2motor_idx):len(self.config.leg_joint2motor_idx)+len(self.config.arm_waist_joint2motor_idx)]
         target_arm_waist_pos = arm_waist_default_angles + arm_waist_actions * self.config.action_scale
+
+        # === 添加关节位置限制 ===
+        if self.clip_positions:
+            # 合并所有目标位置进行统一限制
+            combined_target_pos = np.concatenate([target_leg_pos, target_arm_waist_pos])
+            combined_target_pos_before = combined_target_pos.copy()
+            
+            # 应用关节位置限制
+            combined_target_pos = np.clip(combined_target_pos, self.joint_limits_lower, self.joint_limits_upper)
+            
+            # 检查是否有关节被限制
+            clipped_indices = np.where((combined_target_pos_before != combined_target_pos))[0]
+            if len(clipped_indices) > 0:
+                print(f"关节位置被限制: {clipped_indices}, 原值: {combined_target_pos_before[clipped_indices]}, 限制后: {combined_target_pos[clipped_indices]}")
+            
+            # 分离回腿部和手臂/腰部位置
+            target_leg_pos = combined_target_pos[:len(self.config.leg_joint2motor_idx)]
+            target_arm_waist_pos = combined_target_pos[len(self.config.leg_joint2motor_idx):]
 
         # target_leg_pos = leg_default_angles #np.zeros_like(target_leg_pos)
         # # target_leg_pos[0] = -0.25

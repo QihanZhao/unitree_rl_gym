@@ -56,3 +56,30 @@ num_actions: 23
 num_obs: 75
 
 max_cmd: [0.8, 0.5, 1.57]
+
+# === 关节位置限制 ===
+clip_positions: true           # 是否对关节位置clip
+joint_limits_lower: [
+      # 左腿 (6个DOF) - 基于XML中的实际range值
+      -2.5307, -0.5236, -2.7576, -0.087267, -0.87267, -0.2618,  # L hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll
+      # 右腿 (6个DOF)
+      -2.5307, -2.9671, -2.7576, -0.087267, -0.87267, -0.2618,  # R hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll
+      # 腰部 (3个DOF)
+      -2.618, -0.52, -0.52,  # waist_yaw, waist_roll, waist_pitch
+      # 左臂 (4个DOF)
+      -3.0892, -1.5882, -2.618, -1.0472,  # L shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+      # 右臂 (4个DOF)
+      -3.0892, -2.2515, -2.618, -1.0472   # R shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+      ]
+joint_limits_upper: [
+      # 左腿 (6个DOF) - 基于XML中的实际range值
+      2.8798, 2.9671, 2.7576, 2.8798, 0.5236, 0.2618,   # L hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll
+      # 右腿 (6个DOF)
+      2.8798, 0.5236, 2.7576, 2.8798, 0.5236, 0.2618,   # R hip_pitch, hip_roll, hip_yaw, knee, ankle_pitch, ankle_roll
+      # 腰部 (3个DOF)
+      2.618, 0.52, 0.52,   # waist_yaw, waist_roll, waist_pitch
+      # 左臂 (4个DOF)
+      2.6704, 2.2515, 2.618, 2.0944,   # L shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+      # 右臂 (4个DOF)
+      2.6704, 1.5882, 2.618, 2.0944    # R shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+      ]

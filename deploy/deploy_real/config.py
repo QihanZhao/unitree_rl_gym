@@ -46,3 +46,10 @@ class Config:
 
             self.num_actions = config["num_actions"]
             self.num_obs = config["num_obs"]
+
+            # 添加关节位置限制参数支持
+            self.clip_positions = config.get("clip_positions", False)
+            if "joint_limits_lower" in config:
+                self.joint_limits_lower = np.array(config["joint_limits_lower"], dtype=np.float32)
+            if "joint_limits_upper" in config:
+                self.joint_limits_upper = np.array(config["joint_limits_upper"], dtype=np.float32)
